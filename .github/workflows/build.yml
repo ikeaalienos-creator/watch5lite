@@ -1,0 +1,37 @@
+name: Build Xiaomi Vela RPK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install AIoT Toolkit
+        run: npm install -g @aiot-toolkit/cli
+
+      - name: Build RPK
+        run: aiot build
+
+      - name: Show generated files
+        run: find . -type f -name "*.rpk" -print
+
+      - name: Upload RPK
+        uses: actions/upload-artifact@v4
+        with:
+          name: kolko-i-krzyzyk-rpk
+          path: "dist/*.rpk"
+          if-no-files-found: error
