@@ -1,0 +1,33 @@
+name: Build RPK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Pobierz projekt
+        uses: actions/checkout@v4
+
+      - name: Zainstaluj Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Zainstaluj narzędzia
+        run: |
+          npm install
+          npm install -g @hap-toolkit/cli
+
+      - name: Zbuduj RPK
+        run: |
+          hap build
+
+      - name: Znajdź RPK
+        run: |
+          find . -type f -name "*.rpk" -print
+
+      - name: Udostępnij RPK
+        uses:
